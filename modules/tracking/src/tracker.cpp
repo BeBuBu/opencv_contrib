@@ -106,11 +106,14 @@ bool Tracker::update( const Mat& image, Rect2d& boundingBox )
 
 Ptr<Tracker> Tracker::create( const String& trackerType )
 {
+
   BOILERPLATE_CODE("MIL",TrackerMIL);
   BOILERPLATE_CODE("BOOSTING",TrackerBoosting);
   BOILERPLATE_CODE("MEDIANFLOW",TrackerMedianFlow);
   BOILERPLATE_CODE("TLD",TrackerTLD);
   BOILERPLATE_CODE("KCF",TrackerKCF);
+  BOILERPLATE_CODE("DSST",TrackerDSST);
+
   return Ptr<Tracker>();
 }
 

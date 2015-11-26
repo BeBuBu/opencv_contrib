@@ -51,21 +51,21 @@
 
 
 #define BOILERPLATE_CODE(name,classname) \
-    static Ptr<classname> createTracker(const classname::Params &parameters=classname::Params());\
-    virtual ~classname(){};
+static Ptr<classname> createTracker(const classname::Params &parameters=classname::Params());\
+virtual ~classname(){};
 
 /*
  * Partially based on:
  * ====================================================================================================================
- * 	- [AAM] S. Salti, A. Cavallaro, L. Di Stefano, Adaptive Appearance Modeling for Video Tracking: Survey and Evaluation
+ *  - [AAM] S. Salti, A. Cavallaro, L. Di Stefano, Adaptive Appearance Modeling for Video Tracking: Survey and Evaluation
  *  - [AMVOT] X. Li, W. Hu, C. Shen, Z. Zhang, A. Dick, A. van den Hengel, A Survey of Appearance Models in Visual Object Tracking
  *
  * This Tracking API has been designed with PlantUML. If you modify this API please change UML files under modules/tracking/doc/uml
  *
  */
 
-namespace cv
-{
+ namespace cv
+ {
 
 //! @addtogroup tracking
 //! @{
@@ -74,16 +74,16 @@ namespace cv
 
 /** @brief Abstract base class for TrackerFeature that represents the feature.
  */
-class CV_EXPORTS_W TrackerFeature
-{
- public:
-  virtual ~TrackerFeature();
+  class CV_EXPORTS_W TrackerFeature
+  {
+  public:
+    virtual ~TrackerFeature();
 
   /** @brief Compute the features in the images collection
     @param images The images
     @param response The output response
      */
-  void compute( const std::vector<Mat>& images, Mat& response );
+    void compute( const std::vector<Mat>& images, Mat& response );
 
   /** @brief Create TrackerFeature by tracker feature type
     @param trackerFeatureType The TrackerFeature name
@@ -98,7 +98,7 @@ class CV_EXPORTS_W TrackerFeature
     -   "LBP" -- Local Binary Pattern features
     -   "FEATURE2D" -- All types of Feature2D
      */
-  static Ptr<TrackerFeature> create( const String& trackerFeatureType );
+    static Ptr<TrackerFeature> create( const String& trackerFeatureType );
 
   /** @brief Identify most effective features
     @param response Collection of response for the specific TrackerFeature
@@ -106,18 +106,18 @@ class CV_EXPORTS_W TrackerFeature
 
     @note This method modifies the response parameter
      */
-  virtual void selection( Mat& response, int npoints ) = 0;
+    virtual void selection( Mat& response, int npoints ) = 0;
 
   /** @brief Get the name of the specific TrackerFeature
      */
-  String getClassName() const;
+    String getClassName() const;
 
- protected:
+  protected:
 
-  virtual bool computeImpl( const std::vector<Mat>& images, Mat& response ) = 0;
+    virtual bool computeImpl( const std::vector<Mat>& images, Mat& response ) = 0;
 
-  String className;
-};
+    String className;
+  };
 
 /** @brief Class that manages the extraction and selection of features
 
@@ -131,26 +131,26 @@ TrackerFeatureSet is an aggregation of TrackerFeature
    TrackerFeature
 
  */
-class CV_EXPORTS_W TrackerFeatureSet
-{
- public:
+   class CV_EXPORTS_W TrackerFeatureSet
+   {
+   public:
 
-  TrackerFeatureSet();
+    TrackerFeatureSet();
 
-  ~TrackerFeatureSet();
+    ~TrackerFeatureSet();
 
   /** @brief Extract features from the images collection
     @param images The input images
      */
-  void extraction( const std::vector<Mat>& images );
+    void extraction( const std::vector<Mat>& images );
 
   /** @brief Identify most effective features for all feature types (optional)
      */
-  void selection();
+    void selection();
 
   /** @brief Remove outliers for all feature types (optional)
      */
-  void removeOutliers();
+    void removeOutliers();
 
   /** @brief Add TrackerFeature in the collection. Return true if TrackerFeature is added, false otherwise
     @param trackerFeatureType The TrackerFeature name
@@ -177,30 +177,30 @@ class CV_EXPORTS_W TrackerFeatureSet
     @endcode
     @note If you use the second method, you must initialize the TrackerFeature
      */
-  bool addTrackerFeature( String trackerFeatureType );
+    bool addTrackerFeature( String trackerFeatureType );
 
   /** @overload
     @param feature The TrackerFeature class
     */
-  bool addTrackerFeature( Ptr<TrackerFeature>& feature );
+    bool addTrackerFeature( Ptr<TrackerFeature>& feature );
 
   /** @brief Get the TrackerFeature collection (TrackerFeature name, TrackerFeature pointer)
      */
-  const std::vector<std::pair<String, Ptr<TrackerFeature> > >& getTrackerFeature() const;
+    const std::vector<std::pair<String, Ptr<TrackerFeature> > >& getTrackerFeature() const;
 
   /** @brief Get the responses
 
     @note Be sure to call extraction before getResponses Example TrackerFeatureSet::getResponses : :
      */
-  const std::vector<Mat>& getResponses() const;
+    const std::vector<Mat>& getResponses() const;
 
- private:
+  private:
 
-  void clearResponses();
-  bool blockAddTrackerFeature;
+    void clearResponses();
+    bool blockAddTrackerFeature;
 
   std::vector<std::pair<String, Ptr<TrackerFeature> > > features;  //list of features
-  std::vector<Mat> responses;				//list of response after compute
+  std::vector<Mat> responses;       //list of response after compute
 
 };
 
@@ -211,11 +211,11 @@ sampler.
  */
 class CV_EXPORTS_W TrackerSamplerAlgorithm
 {
- public:
+public:
   /**
    * \brief Destructor
    */
-  virtual ~TrackerSamplerAlgorithm();
+   virtual ~TrackerSamplerAlgorithm();
 
   /** @brief Create TrackerSamplerAlgorithm by tracker sampler type.
     @param trackerSamplerType The trackerSamplerType name
@@ -225,7 +225,7 @@ class CV_EXPORTS_W TrackerSamplerAlgorithm
     -   "CSC" -- Current State Center
     -   "CS" -- Current State
      */
-  static Ptr<TrackerSamplerAlgorithm> create( const String& trackerSamplerType );
+    static Ptr<TrackerSamplerAlgorithm> create( const String& trackerSamplerType );
 
   /** @brief Computes the regions starting from a position in an image.
 
@@ -236,17 +236,17 @@ class CV_EXPORTS_W TrackerSamplerAlgorithm
 
     @param sample The computed samples @cite AAM Fig. 1 variable Sk
      */
-  bool sampling( const Mat& image, Rect boundingBox, std::vector<Mat>& sample );
+    bool sampling( const Mat& image, Rect boundingBox, std::vector<Mat>& sample );
 
   /** @brief Get the name of the specific TrackerSamplerAlgorithm
     */
-  String getClassName() const;
+    String getClassName() const;
 
- protected:
-  String className;
+  protected:
+    String className;
 
-  virtual bool samplingImpl( const Mat& image, Rect boundingBox, std::vector<Mat>& sample ) = 0;
-};
+    virtual bool samplingImpl( const Mat& image, Rect boundingBox, std::vector<Mat>& sample ) = 0;
+  };
 
 /**
  * \brief Class that manages the sampler in order to select regions for the update the model of the tracker
@@ -261,33 +261,33 @@ TrackerSampler is an aggregation of TrackerSamplerAlgorithm
 @sa
    TrackerSamplerAlgorithm
  */
-class CV_EXPORTS_W TrackerSampler
-{
- public:
+   class CV_EXPORTS_W TrackerSampler
+   {
+   public:
 
   /**
    * \brief Constructor
    */
-  TrackerSampler();
+   TrackerSampler();
 
   /**
    * \brief Destructor
    */
-  ~TrackerSampler();
+   ~TrackerSampler();
 
   /** @brief Computes the regions starting from a position in an image
     @param image The current frame
     @param boundingBox The bounding box from which regions can be calculated
      */
-  void sampling( const Mat& image, Rect boundingBox );
+    void sampling( const Mat& image, Rect boundingBox );
 
   /** @brief Return the collection of the TrackerSamplerAlgorithm
     */
-  const std::vector<std::pair<String, Ptr<TrackerSamplerAlgorithm> > >& getSamplers() const;
+    const std::vector<std::pair<String, Ptr<TrackerSamplerAlgorithm> > >& getSamplers() const;
 
   /** @brief Return the samples from all TrackerSamplerAlgorithm, @cite AAM Fig. 1 variable Sk
     */
-  const std::vector<Mat>& getSamples() const;
+    const std::vector<Mat>& getSamples() const;
 
   /** @brief Add TrackerSamplerAlgorithm in the collection. Return true if sampler is added, false otherwise
     @param trackerSamplerAlgorithmType The TrackerSamplerAlgorithm name
@@ -310,20 +310,20 @@ class CV_EXPORTS_W TrackerSampler
     @endcode
     @note If you use the second method, you must initialize the TrackerSamplerAlgorithm
      */
-  bool addTrackerSamplerAlgorithm( String trackerSamplerAlgorithmType );
+    bool addTrackerSamplerAlgorithm( String trackerSamplerAlgorithmType );
 
   /** @overload
     @param sampler The TrackerSamplerAlgorithm
     */
-  bool addTrackerSamplerAlgorithm( Ptr<TrackerSamplerAlgorithm>& sampler );
+    bool addTrackerSamplerAlgorithm( Ptr<TrackerSamplerAlgorithm>& sampler );
 
- private:
-  std::vector<std::pair<String, Ptr<TrackerSamplerAlgorithm> > > samplers;
-  std::vector<Mat> samples;
-  bool blockAddTrackerSampler;
+  private:
+    std::vector<std::pair<String, Ptr<TrackerSamplerAlgorithm> > > samplers;
+    std::vector<Mat> samples;
+    bool blockAddTrackerSampler;
 
-  void clearSamples();
-};
+    void clearSamples();
+  };
 
 /************************************ TrackerModel Base Classes ************************************/
 
@@ -336,7 +336,7 @@ width, height, orientation, etc.
  */
 class CV_EXPORTS_W TrackerTargetState
 {
- public:
+public:
   virtual ~TrackerTargetState()
   {
   }
@@ -345,35 +345,35 @@ class CV_EXPORTS_W TrackerTargetState
    * \brief Get the position
    * \return The position
    */
-  Point2f getTargetPosition() const;
+   Point2f getTargetPosition() const;
 
   /**
    * \brief Set the position
    * \param position The position
    */
-  void setTargetPosition( const Point2f& position );
+   void setTargetPosition( const Point2f& position );
   /**
    * \brief Get the width of the target
    * \return The width of the target
    */
-  int getTargetWidth() const;
+   int getTargetWidth() const;
 
   /**
    * \brief Set the width of the target
    * \param width The width of the target
    */
-  void setTargetWidth( int width );
+   void setTargetWidth( int width );
   /**
    * \brief Get the height of the target
    * \return The height of the target
    */
-  int getTargetHeight() const;
+   int getTargetHeight() const;
 
   /**
    * \brief Set the height of the target
    * \param height The height of the target
    */
-  void setTargetHeight( int height );
+   void setTargetHeight( int height );
 
  protected:
   Point2f targetPosition;
@@ -405,18 +405,18 @@ See @cite AMVOT Statistical modeling (Fig. 3), Table III (generative) - IV (disc
  */
 class CV_EXPORTS_W TrackerStateEstimator
 {
- public:
+public:
   virtual ~TrackerStateEstimator();
 
   /** @brief Estimate the most likely target state, return the estimated state
     @param confidenceMaps The overall appearance model as a list of :cConfidenceMap
      */
-  Ptr<TrackerTargetState> estimate( const std::vector<ConfidenceMap>& confidenceMaps );
+    Ptr<TrackerTargetState> estimate( const std::vector<ConfidenceMap>& confidenceMaps );
 
   /** @brief Update the ConfidenceMap with the scores
     @param confidenceMaps The overall appearance model as a list of :cConfidenceMap
      */
-  void update( std::vector<ConfidenceMap>& confidenceMaps );
+    void update( std::vector<ConfidenceMap>& confidenceMaps );
 
   /** @brief Create TrackerStateEstimator by tracker state estimator type
     @param trackeStateEstimatorType The TrackerStateEstimator name
@@ -429,18 +429,18 @@ class CV_EXPORTS_W TrackerStateEstimator
 
     -   "SVM" -- SVM-based discriminative appearance models. See @cite AMVOT section 4.5
      */
-  static Ptr<TrackerStateEstimator> create( const String& trackeStateEstimatorType );
+    static Ptr<TrackerStateEstimator> create( const String& trackeStateEstimatorType );
 
   /** @brief Get the name of the specific TrackerStateEstimator
      */
-  String getClassName() const;
+    String getClassName() const;
 
- protected:
+  protected:
 
-  virtual Ptr<TrackerTargetState> estimateImpl( const std::vector<ConfidenceMap>& confidenceMaps ) = 0;
-  virtual void updateImpl( std::vector<ConfidenceMap>& confidenceMaps ) = 0;
-  String className;
-};
+    virtual Ptr<TrackerTargetState> estimateImpl( const std::vector<ConfidenceMap>& confidenceMaps ) = 0;
+    virtual void updateImpl( std::vector<ConfidenceMap>& confidenceMaps ) = 0;
+    String className;
+  };
 
 /** @brief Abstract class that represents the model of the target. It must be instantiated by specialized
 tracker
@@ -451,87 +451,87 @@ Inherits this with your TrackerModel
  */
 class CV_EXPORTS_W TrackerModel
 {
- public:
+public:
 
   /**
    * \brief Constructor
    */
-  TrackerModel();
+   TrackerModel();
 
   /**
    * \brief Destructor
    */
-  virtual ~TrackerModel();
+   virtual ~TrackerModel();
 
   /** @brief Set TrackerEstimator, return true if the tracker state estimator is added, false otherwise
     @param trackerStateEstimator The TrackerStateEstimator
     @note You can add only one TrackerStateEstimator
      */
-  bool setTrackerStateEstimator( Ptr<TrackerStateEstimator> trackerStateEstimator );
+    bool setTrackerStateEstimator( Ptr<TrackerStateEstimator> trackerStateEstimator );
 
   /** @brief Estimate the most likely target location
 
     @cite AAM ME, Model Estimation table I
     @param responses Features extracted from TrackerFeatureSet
      */
-  void modelEstimation( const std::vector<Mat>& responses );
+    void modelEstimation( const std::vector<Mat>& responses );
 
   /** @brief Update the model
 
     @cite AAM MU, Model Update table I
      */
-  void modelUpdate();
+    void modelUpdate();
 
   /** @brief Run the TrackerStateEstimator, return true if is possible to estimate a new state, false otherwise
     */
-  bool runStateEstimator();
+    bool runStateEstimator();
 
   /** @brief Set the current TrackerTargetState in the Trajectory
     @param lastTargetState The current TrackerTargetState
      */
-  void setLastTargetState( const Ptr<TrackerTargetState>& lastTargetState );
+    void setLastTargetState( const Ptr<TrackerTargetState>& lastTargetState );
 
   /** @brief Get the last TrackerTargetState from Trajectory
     */
-  Ptr<TrackerTargetState> getLastTargetState() const;
+    Ptr<TrackerTargetState> getLastTargetState() const;
 
   /** @brief Get the list of the ConfidenceMap
     */
-  const std::vector<ConfidenceMap>& getConfidenceMaps() const;
+    const std::vector<ConfidenceMap>& getConfidenceMaps() const;
 
   /** @brief Get the last ConfidenceMap for the current frame
      */
-  const ConfidenceMap& getLastConfidenceMap() const;
+    const ConfidenceMap& getLastConfidenceMap() const;
 
   /** @brief Get the TrackerStateEstimator
     */
-  Ptr<TrackerStateEstimator> getTrackerStateEstimator() const;
+    Ptr<TrackerStateEstimator> getTrackerStateEstimator() const;
 
- private:
+  private:
 
-  void clearCurrentConfidenceMap();
+    void clearCurrentConfidenceMap();
 
- protected:
-  std::vector<ConfidenceMap> confidenceMaps;
-  Ptr<TrackerStateEstimator> stateEstimator;
-  ConfidenceMap currentConfidenceMap;
-  Trajectory trajectory;
-  int maxCMLength;
+  protected:
+    std::vector<ConfidenceMap> confidenceMaps;
+    Ptr<TrackerStateEstimator> stateEstimator;
+    ConfidenceMap currentConfidenceMap;
+    Trajectory trajectory;
+    int maxCMLength;
 
-  virtual void modelEstimationImpl( const std::vector<Mat>& responses ) = 0;
-  virtual void modelUpdateImpl() = 0;
+    virtual void modelEstimationImpl( const std::vector<Mat>& responses ) = 0;
+    virtual void modelUpdateImpl() = 0;
 
-};
+  };
 
 /************************************ Tracker Base Class ************************************/
 
 /** @brief Base abstract class for the long-term tracker:
  */
-class CV_EXPORTS_W Tracker : public virtual Algorithm
-{
- public:
+  class CV_EXPORTS_W Tracker : public virtual Algorithm
+  {
+  public:
 
-  virtual ~Tracker();
+    virtual ~Tracker();
 
   /** @brief Initialize the tracker with a know bounding box that surrounding the target
     @param image The initial frame
@@ -539,7 +539,7 @@ class CV_EXPORTS_W Tracker : public virtual Algorithm
 
     @return True if initialization went succesfully, false otherwise
      */
-  bool init( const Mat& image, const Rect2d& boundingBox );
+    bool init( const Mat& image, const Rect2d& boundingBox );
 
   /** @brief Update the tracker, find the new most likely bounding box for the target
     @param image The current frame
@@ -550,7 +550,7 @@ class CV_EXPORTS_W Tracker : public virtual Algorithm
     current frame. Note, that latter *does not* imply that tracker has failed, maybe target is indeed
     missing from the frame (say, out of sight)
      */
-  bool update( const Mat& image, Rect2d& boundingBox );
+    bool update( const Mat& image, Rect2d& boundingBox );
 
   /** @brief Creates a tracker by its name.
     @param trackerType Tracker type
@@ -560,42 +560,42 @@ class CV_EXPORTS_W Tracker : public virtual Algorithm
     -   "MIL" -- TrackerMIL
     -   "BOOSTING" -- TrackerBoosting
      */
-  static Ptr<Tracker> create( const String& trackerType );
+    static Ptr<Tracker> create( const String& trackerType );
 
-  virtual void read( const FileNode& fn )=0;
-  virtual void write( FileStorage& fs ) const=0;
+    virtual void read( const FileNode& fn )=0;
+    virtual void write( FileStorage& fs ) const=0;
 
-  Ptr<TrackerModel> getModel()
-  {
-	  return model;
-  }
+    Ptr<TrackerModel> getModel()
+    {
+      return model;
+    }
 
- protected:
+  protected:
 
-  virtual bool initImpl( const Mat& image, const Rect2d& boundingBox ) = 0;
-  virtual bool updateImpl( const Mat& image, Rect2d& boundingBox ) = 0;
+    virtual bool initImpl( const Mat& image, const Rect2d& boundingBox ) = 0;
+    virtual bool updateImpl( const Mat& image, Rect2d& boundingBox ) = 0;
 
-  bool isInit;
+    bool isInit;
 
-  Ptr<TrackerFeatureSet> featureSet;
-  Ptr<TrackerSampler> sampler;
-  Ptr<TrackerModel> model;
-};
+    Ptr<TrackerFeatureSet> featureSet;
+    Ptr<TrackerSampler> sampler;
+    Ptr<TrackerModel> model;
+  };
 
 
 /************************************ Specific TrackerStateEstimator Classes ************************************/
 
 /** @brief TrackerStateEstimator based on Boosting
     */
-class CV_EXPORTS_W TrackerStateEstimatorMILBoosting : public TrackerStateEstimator
-{
- public:
+  class CV_EXPORTS_W TrackerStateEstimatorMILBoosting : public TrackerStateEstimator
+  {
+  public:
 
   /**
    * Implementation of the target state for TrackerStateEstimatorMILBoosting
    */
-  class TrackerMILTargetState : public TrackerTargetState
-  {
+   class TrackerMILTargetState : public TrackerTargetState
+   {
 
    public:
     /**
@@ -606,15 +606,15 @@ class CV_EXPORTS_W TrackerStateEstimatorMILBoosting : public TrackerStateEstimat
      * \param foreground label for target or background
      * \param features features extracted
      */
-    TrackerMILTargetState( const Point2f& position, int width, int height, bool foreground, const Mat& features );
+     TrackerMILTargetState( const Point2f& position, int width, int height, bool foreground, const Mat& features );
 
     /**
      * \brief Destructor
      */
-    ~TrackerMILTargetState()
-    {
-    }
-    ;
+     ~TrackerMILTargetState()
+     {
+     }
+     ;
 
     /** @brief Set label: true for target foreground, false for background
     @param foreground Label for background/foreground
@@ -631,7 +631,7 @@ class CV_EXPORTS_W TrackerStateEstimatorMILBoosting : public TrackerStateEstimat
      */
     Mat getFeatures() const;
 
-   private:
+  private:
     bool isTarget;
     Mat targetFeatures;
   };
@@ -639,40 +639,40 @@ class CV_EXPORTS_W TrackerStateEstimatorMILBoosting : public TrackerStateEstimat
   /** @brief Constructor
     @param nFeatures Number of features for each sample
      */
-  TrackerStateEstimatorMILBoosting( int nFeatures = 250 );
-  ~TrackerStateEstimatorMILBoosting();
+    TrackerStateEstimatorMILBoosting( int nFeatures = 250 );
+    ~TrackerStateEstimatorMILBoosting();
 
   /** @brief Set the current confidenceMap
     @param confidenceMap The current :cConfidenceMap
      */
-  void setCurrentConfidenceMap( ConfidenceMap& confidenceMap );
+    void setCurrentConfidenceMap( ConfidenceMap& confidenceMap );
 
- protected:
-  Ptr<TrackerTargetState> estimateImpl( const std::vector<ConfidenceMap>& confidenceMaps );
-  void updateImpl( std::vector<ConfidenceMap>& confidenceMaps );
+  protected:
+    Ptr<TrackerTargetState> estimateImpl( const std::vector<ConfidenceMap>& confidenceMaps );
+    void updateImpl( std::vector<ConfidenceMap>& confidenceMaps );
 
- private:
-  uint max_idx( const std::vector<float> &v );
-  void prepareData( const ConfidenceMap& confidenceMap, Mat& positive, Mat& negative );
+  private:
+    uint max_idx( const std::vector<float> &v );
+    void prepareData( const ConfidenceMap& confidenceMap, Mat& positive, Mat& negative );
 
-  ClfMilBoost boostMILModel;
-  bool trained;
-  int numFeatures;
+    ClfMilBoost boostMILModel;
+    bool trained;
+    int numFeatures;
 
-  ConfidenceMap currentConfidenceMap;
-};
+    ConfidenceMap currentConfidenceMap;
+  };
 
 /** @brief TrackerStateEstimatorAdaBoosting based on ADA-Boosting
  */
-class CV_EXPORTS_W TrackerStateEstimatorAdaBoosting : public TrackerStateEstimator
-{
- public:
+  class CV_EXPORTS_W TrackerStateEstimatorAdaBoosting : public TrackerStateEstimator
+  {
+  public:
   /** @brief Implementation of the target state for TrackerAdaBoostingTargetState
     */
-  class TrackerAdaBoostingTargetState : public TrackerTargetState
-  {
+    class TrackerAdaBoostingTargetState : public TrackerTargetState
+    {
 
-   public:
+    public:
     /**
      * \brief Constructor
      * \param position Top left corner of the bounding box
@@ -681,15 +681,15 @@ class CV_EXPORTS_W TrackerStateEstimatorAdaBoosting : public TrackerStateEstimat
      * \param foreground label for target or background
      * \param responses list of features
      */
-    TrackerAdaBoostingTargetState( const Point2f& position, int width, int height, bool foreground, const Mat& responses );
+     TrackerAdaBoostingTargetState( const Point2f& position, int width, int height, bool foreground, const Mat& responses );
 
     /**
      * \brief Destructor
      */
-    ~TrackerAdaBoostingTargetState()
-    {
-    }
-    ;
+     ~TrackerAdaBoostingTargetState()
+     {
+     }
+     ;
 
     /** @brief Set the features extracted from TrackerFeatureSet
     @param responses The features extracted
@@ -706,7 +706,7 @@ class CV_EXPORTS_W TrackerStateEstimatorAdaBoosting : public TrackerStateEstimat
     */
     bool isTargetFg() const;
 
-   private:
+  private:
     bool isTarget;
     Mat targetResponses;
 
@@ -719,68 +719,68 @@ class CV_EXPORTS_W TrackerStateEstimatorAdaBoosting : public TrackerStateEstimat
     @param patchSize tracking rect
     @param ROI initial ROI
      */
-  TrackerStateEstimatorAdaBoosting( int numClassifer, int initIterations, int nFeatures, Size patchSize, const Rect& ROI );
+    TrackerStateEstimatorAdaBoosting( int numClassifer, int initIterations, int nFeatures, Size patchSize, const Rect& ROI );
 
   /**
    * \brief Destructor
    */
-  ~TrackerStateEstimatorAdaBoosting();
+   ~TrackerStateEstimatorAdaBoosting();
 
   /** @brief Get the sampling ROI
      */
-  Rect getSampleROI() const;
+   Rect getSampleROI() const;
 
   /** @brief Set the sampling ROI
     @param ROI the sampling ROI
      */
-  void setSampleROI( const Rect& ROI );
+    void setSampleROI( const Rect& ROI );
 
   /** @brief Set the current confidenceMap
     @param confidenceMap The current :cConfidenceMap
      */
-  void setCurrentConfidenceMap( ConfidenceMap& confidenceMap );
+    void setCurrentConfidenceMap( ConfidenceMap& confidenceMap );
 
   /** @brief Get the list of the selected weak classifiers for the classification step
      */
-  std::vector<int> computeSelectedWeakClassifier();
+    std::vector<int> computeSelectedWeakClassifier();
 
   /** @brief Get the list of the weak classifiers that should be replaced
      */
-  std::vector<int> computeReplacedClassifier();
+    std::vector<int> computeReplacedClassifier();
 
   /** @brief Get the list of the weak classifiers that replace those to be replaced
      */
-  std::vector<int> computeSwappedClassifier();
+    std::vector<int> computeSwappedClassifier();
 
- protected:
-  Ptr<TrackerTargetState> estimateImpl( const std::vector<ConfidenceMap>& confidenceMaps );
-  void updateImpl( std::vector<ConfidenceMap>& confidenceMaps );
+  protected:
+    Ptr<TrackerTargetState> estimateImpl( const std::vector<ConfidenceMap>& confidenceMaps );
+    void updateImpl( std::vector<ConfidenceMap>& confidenceMaps );
 
-  Ptr<StrongClassifierDirectSelection> boostClassifier;
+    Ptr<StrongClassifierDirectSelection> boostClassifier;
 
- private:
-  int numBaseClassifier;
-  int iterationInit;
-  int numFeatures;
-  bool trained;
-  Size initPatchSize;
-  Rect sampleROI;
-  std::vector<int> replacedClassifier;
-  std::vector<int> swappedClassifier;
+  private:
+    int numBaseClassifier;
+    int iterationInit;
+    int numFeatures;
+    bool trained;
+    Size initPatchSize;
+    Rect sampleROI;
+    std::vector<int> replacedClassifier;
+    std::vector<int> swappedClassifier;
 
-  ConfidenceMap currentConfidenceMap;
-};
+    ConfidenceMap currentConfidenceMap;
+  };
 
 /**
  * \brief TrackerStateEstimator based on SVM
  */
-class CV_EXPORTS_W TrackerStateEstimatorSVM : public TrackerStateEstimator
-{
+ class CV_EXPORTS_W TrackerStateEstimatorSVM : public TrackerStateEstimator
+ {
  public:
   TrackerStateEstimatorSVM();
   ~TrackerStateEstimatorSVM();
 
- protected:
+protected:
   Ptr<TrackerTargetState> estimateImpl( const std::vector<ConfidenceMap>& confidenceMaps );
   void updateImpl( std::vector<ConfidenceMap>& confidenceMaps );
 };
@@ -791,7 +791,7 @@ class CV_EXPORTS_W TrackerStateEstimatorSVM : public TrackerStateEstimator
  */
 class CV_EXPORTS_W TrackerSamplerCSC : public TrackerSamplerAlgorithm
 {
- public:
+public:
   enum
   {
     MODE_INIT_POS = 1,  //!< mode for init positive samples
@@ -806,7 +806,7 @@ class CV_EXPORTS_W TrackerSamplerCSC : public TrackerSamplerAlgorithm
     Params();
     float initInRad;        //!< radius for gathering positive instances during init
     float trackInPosRad;    //!< radius for gathering positive instances during tracking
-    float searchWinSize;	//!< size of search window
+    float searchWinSize;  //!< size of search window
     int initMaxNegNum;      //!< # negative samples to use during init
     int trackMaxPosNum;     //!< # positive samples to use during training
     int trackMaxNegNum;     //!< # negative samples to use during training
@@ -815,7 +815,7 @@ class CV_EXPORTS_W TrackerSamplerCSC : public TrackerSamplerAlgorithm
   /** @brief Constructor
     @param parameters TrackerSamplerCSC parameters TrackerSamplerCSC::Params
      */
-  TrackerSamplerCSC( const TrackerSamplerCSC::Params &parameters = TrackerSamplerCSC::Params() );
+    TrackerSamplerCSC( const TrackerSamplerCSC::Params &parameters = TrackerSamplerCSC::Params() );
 
   /** @brief Set the sampling mode of TrackerSamplerCSC
     @param samplingMode The sampling mode
@@ -828,30 +828,30 @@ class CV_EXPORTS_W TrackerSamplerCSC : public TrackerSamplerAlgorithm
     -   "MODE_TRACK_NEG = 4" -- for the negative sampling in update step
     -   "MODE_DETECT = 5" -- for the sampling in detection step
      */
-  void setMode( int samplingMode );
+    void setMode( int samplingMode );
 
-  ~TrackerSamplerCSC();
+    ~TrackerSamplerCSC();
 
- protected:
+  protected:
 
-  bool samplingImpl( const Mat& image, Rect boundingBox, std::vector<Mat>& sample );
+    bool samplingImpl( const Mat& image, Rect boundingBox, std::vector<Mat>& sample );
 
- private:
+  private:
 
-  Params params;
-  int mode;
-  RNG rng;
+    Params params;
+    int mode;
+    RNG rng;
 
-  std::vector<Mat> sampleImage( const Mat& img, int x, int y, int w, int h, float inrad, float outrad = 0, int maxnum = 1000000 );
-};
+    std::vector<Mat> sampleImage( const Mat& img, int x, int y, int w, int h, float inrad, float outrad = 0, int maxnum = 1000000 );
+  };
 
 /** @brief TrackerSampler based on CS (current state), used by algorithm TrackerBoosting
  */
-class CV_EXPORTS_W TrackerSamplerCS : public TrackerSamplerAlgorithm
-{
- public:
-  enum
+  class CV_EXPORTS_W TrackerSamplerCS : public TrackerSamplerAlgorithm
   {
+  public:
+    enum
+    {
     MODE_POSITIVE = 1,  //!< mode for positive samples
     MODE_NEGATIVE = 2,  //!< mode for negative samples
     MODE_CLASSIFY = 3  //!< mode for classify samples
@@ -866,7 +866,7 @@ class CV_EXPORTS_W TrackerSamplerCS : public TrackerSamplerAlgorithm
   /** @brief Constructor
     @param parameters TrackerSamplerCS parameters TrackerSamplerCS::Params
      */
-  TrackerSamplerCS( const TrackerSamplerCS::Params &parameters = TrackerSamplerCS::Params() );
+    TrackerSamplerCS( const TrackerSamplerCS::Params &parameters = TrackerSamplerCS::Params() );
 
   /** @brief Set the sampling mode of TrackerSamplerCS
     @param samplingMode The sampling mode
@@ -877,25 +877,25 @@ class CV_EXPORTS_W TrackerSamplerCS : public TrackerSamplerAlgorithm
     -   "MODE_NEGATIVE = 2" -- for the negative sampling
     -   "MODE_CLASSIFY = 3" -- for the sampling in classification step
      */
-  void setMode( int samplingMode );
+    void setMode( int samplingMode );
 
-  ~TrackerSamplerCS();
+    ~TrackerSamplerCS();
 
-  bool samplingImpl( const Mat& image, Rect boundingBox, std::vector<Mat>& sample );
-  Rect getROI() const;
- private:
-  Rect getTrackingROI( float searchFactor );
-  Rect RectMultiply( const Rect & rect, float f );
-  std::vector<Mat> patchesRegularScan( const Mat& image, Rect trackingROI, Size patchSize );
-  void setCheckedROI( Rect imageROI );
+    bool samplingImpl( const Mat& image, Rect boundingBox, std::vector<Mat>& sample );
+    Rect getROI() const;
+  private:
+    Rect getTrackingROI( float searchFactor );
+    Rect RectMultiply( const Rect & rect, float f );
+    std::vector<Mat> patchesRegularScan( const Mat& image, Rect trackingROI, Size patchSize );
+    void setCheckedROI( Rect imageROI );
 
-  Params params;
-  int mode;
-  Rect trackedPatch;
-  Rect validROI;
-  Rect ROI;
+    Params params;
+    int mode;
+    Rect trackedPatch;
+    Rect validROI;
+    Rect ROI;
 
-};
+  };
 
 /** @brief This sampler is based on particle filtering.
 
@@ -921,9 +921,9 @@ public:
     algorithm. Below is the structure exposed, together with its members briefly explained with
     reference to the above discussion on algorithm's working.
  */
-  struct CV_EXPORTS Params
-  {
-    Params();
+    struct CV_EXPORTS Params
+    {
+      Params();
     int iterationNum; //!< number of selection rounds
     int particlesNum; //!< number of "perturbed" boxes on each round
     double alpha; //!< with each new round we exponentially decrease the amount of "perturbing" we allow (like in simulated annealing)
@@ -935,22 +935,22 @@ public:
     @param chosenRect Initial rectangle, that is supposed to contain target we'd like to track.
     @param parameters
      */
-  TrackerSamplerPF(const Mat& chosenRect,const TrackerSamplerPF::Params &parameters = TrackerSamplerPF::Params());
-protected:
-  bool samplingImpl( const Mat& image, Rect boundingBox, std::vector<Mat>& sample );
-private:
-  Params params;
-  Ptr<MinProblemSolver> _solver;
-  Ptr<MinProblemSolver::Function> _function;
-};
+    TrackerSamplerPF(const Mat& chosenRect,const TrackerSamplerPF::Params &parameters = TrackerSamplerPF::Params());
+  protected:
+    bool samplingImpl( const Mat& image, Rect boundingBox, std::vector<Mat>& sample );
+  private:
+    Params params;
+    Ptr<MinProblemSolver> _solver;
+    Ptr<MinProblemSolver::Function> _function;
+  };
 
 /************************************ Specific TrackerFeature Classes ************************************/
 
 /**
  * \brief TrackerFeature based on Feature2D
  */
-class CV_EXPORTS_W TrackerFeatureFeature2d : public TrackerFeature
-{
+ class CV_EXPORTS_W TrackerFeatureFeature2d : public TrackerFeature
+ {
  public:
 
   /**
@@ -958,17 +958,17 @@ class CV_EXPORTS_W TrackerFeatureFeature2d : public TrackerFeature
    * \param detectorType string of FeatureDetector
    * \param descriptorType string of DescriptorExtractor
    */
-  TrackerFeatureFeature2d( String detectorType, String descriptorType );
+   TrackerFeatureFeature2d( String detectorType, String descriptorType );
 
-  ~TrackerFeatureFeature2d();
+   ~TrackerFeatureFeature2d();
 
-  void selection( Mat& response, int npoints );
+   void selection( Mat& response, int npoints );
 
  protected:
 
   bool computeImpl( const std::vector<Mat>& images, Mat& response );
 
- private:
+private:
 
   std::vector<KeyPoint> keypoints;
 };
@@ -976,8 +976,8 @@ class CV_EXPORTS_W TrackerFeatureFeature2d : public TrackerFeature
 /**
  * \brief TrackerFeature based on HOG
  */
-class CV_EXPORTS_W TrackerFeatureHOG : public TrackerFeature
-{
+ class CV_EXPORTS_W TrackerFeatureHOG : public TrackerFeature
+ {
  public:
 
   TrackerFeatureHOG();
@@ -986,7 +986,7 @@ class CV_EXPORTS_W TrackerFeatureHOG : public TrackerFeature
 
   void selection( Mat& response, int npoints );
 
- protected:
+protected:
 
   bool computeImpl( const std::vector<Mat>& images, Mat& response );
 
@@ -997,7 +997,7 @@ class CV_EXPORTS_W TrackerFeatureHOG : public TrackerFeature
  */
 class CV_EXPORTS_W TrackerFeatureHAAR : public TrackerFeature
 {
- public:
+public:
   struct CV_EXPORTS Params
   {
     Params();
@@ -1009,16 +1009,16 @@ class CV_EXPORTS_W TrackerFeatureHAAR : public TrackerFeature
   /** @brief Constructor
     @param parameters TrackerFeatureHAAR parameters TrackerFeatureHAAR::Params
      */
-  TrackerFeatureHAAR( const TrackerFeatureHAAR::Params &parameters = TrackerFeatureHAAR::Params() );
+    TrackerFeatureHAAR( const TrackerFeatureHAAR::Params &parameters = TrackerFeatureHAAR::Params() );
 
-  ~TrackerFeatureHAAR();
+    ~TrackerFeatureHAAR();
 
   /** @brief Compute the features only for the selected indices in the images collection
     @param selFeatures indices of selected features
     @param images The images
     @param response Collection of response for the specific TrackerFeature
      */
-  bool extractSelected( const std::vector<int> selFeatures, const std::vector<Mat>& images, Mat& response );
+    bool extractSelected( const std::vector<int> selFeatures, const std::vector<Mat>& images, Mat& response );
 
   /** @brief Identify most effective features
     @param response Collection of response for the specific TrackerFeature
@@ -1026,7 +1026,7 @@ class CV_EXPORTS_W TrackerFeatureHAAR : public TrackerFeature
 
     @note This method modifies the response parameter
      */
-  void selection( Mat& response, int npoints );
+    void selection( Mat& response, int npoints );
 
   /** @brief Swap the feature in position source with the feature in position target
   @param source The source position
@@ -1043,22 +1043,22 @@ class CV_EXPORTS_W TrackerFeatureHAAR : public TrackerFeature
   /** @brief Get the feature in position id
     @param id The position
      */
-  CvHaarEvaluator::FeatureHaar& getFeatureAt( int id );
+    CvHaarEvaluator::FeatureHaar& getFeatureAt( int id );
 
- protected:
-  bool computeImpl( const std::vector<Mat>& images, Mat& response );
+  protected:
+    bool computeImpl( const std::vector<Mat>& images, Mat& response );
 
- private:
+  private:
 
-  Params params;
-  Ptr<CvHaarEvaluator> featureEvaluator;
-};
+    Params params;
+    Ptr<CvHaarEvaluator> featureEvaluator;
+  };
 
 /**
  * \brief TrackerFeature based on LBP
  */
-class CV_EXPORTS_W TrackerFeatureLBP : public TrackerFeature
-{
+ class CV_EXPORTS_W TrackerFeatureLBP : public TrackerFeature
+ {
  public:
 
   TrackerFeatureLBP();
@@ -1067,7 +1067,7 @@ class CV_EXPORTS_W TrackerFeatureLBP : public TrackerFeature
 
   void selection( Mat& response, int npoints );
 
- protected:
+protected:
 
   bool computeImpl( const std::vector<Mat>& images, Mat& response );
 
@@ -1085,17 +1085,17 @@ Original code can be found here <http://vision.ucsd.edu/~bbabenko/project_miltra
  */
 class CV_EXPORTS_W TrackerMIL : public Tracker
 {
- public:
+public:
   struct CV_EXPORTS Params
   {
     Params();
     //parameters for sampler
-    float samplerInitInRadius;	//!< radius for gathering positive instances during init
+    float samplerInitInRadius;  //!< radius for gathering positive instances during init
     int samplerInitMaxNegNum;  //!< # negative samples to use during init
     float samplerSearchWinSize;  //!< size of search window
     float samplerTrackInRadius;  //!< radius for gathering positive instances during tracking
-    int samplerTrackMaxPosNum;	//!< # positive samples to use during tracking
-    int samplerTrackMaxNegNum;	//!< # negative samples to use during tracking
+    int samplerTrackMaxPosNum;  //!< # positive samples to use during tracking
+    int samplerTrackMaxNegNum;  //!< # negative samples to use during tracking
     int featureSetNumFeatures;  //!< # features
 
     void read( const FileNode& fn );
@@ -1105,8 +1105,8 @@ class CV_EXPORTS_W TrackerMIL : public Tracker
   /** @brief Constructor
     @param parameters MIL parameters TrackerMIL::Params
      */
-  BOILERPLATE_CODE("MIL",TrackerMIL);
-};
+    BOILERPLATE_CODE("MIL",TrackerMIL);
+  };
 
 /** @brief This is a real-time object tracking based on a novel on-line version of the AdaBoost algorithm.
 
@@ -1115,7 +1115,7 @@ drifting problem. The implementation is based on @cite OLB .
  */
 class CV_EXPORTS_W TrackerBoosting : public Tracker
 {
- public:
+public:
   struct CV_EXPORTS Params
   {
     Params();
@@ -1127,19 +1127,19 @@ class CV_EXPORTS_W TrackerBoosting : public Tracker
     /**
      * \brief Read parameters from file
      */
-    void read( const FileNode& fn );
+     void read( const FileNode& fn );
 
     /**
      * \brief Write parameters in a file
      */
-    void write( FileStorage& fs ) const;
-  };
+     void write( FileStorage& fs ) const;
+   };
 
   /** @brief Constructor
     @param parameters BOOSTING parameters TrackerBoosting::Params
      */
-  BOILERPLATE_CODE("BOOSTING",TrackerBoosting);
-};
+    BOILERPLATE_CODE("BOOSTING",TrackerBoosting);
+  };
 
 /** @brief Median Flow tracker implementation.
 
@@ -1153,7 +1153,7 @@ reference purpose.
  */
 class CV_EXPORTS_W TrackerMedianFlow : public Tracker
 {
- public:
+public:
   struct CV_EXPORTS Params
   {
     Params();
@@ -1166,8 +1166,8 @@ class CV_EXPORTS_W TrackerMedianFlow : public Tracker
   /** @brief Constructor
     @param parameters Median Flow parameters TrackerMedianFlow::Params
     */
-  BOILERPLATE_CODE("MEDIANFLOW",TrackerMedianFlow);
-};
+    BOILERPLATE_CODE("MEDIANFLOW",TrackerMedianFlow);
+  };
 
 /** @brief TLD is a novel tracking framework that explicitly decomposes the long-term tracking task into
 tracking, learning and detection.
@@ -1182,7 +1182,7 @@ occlusions, object absence etc.
  */
 class CV_EXPORTS_W TrackerTLD : public Tracker
 {
- public:
+public:
   struct CV_EXPORTS Params
   {
     Params();
@@ -1193,8 +1193,8 @@ class CV_EXPORTS_W TrackerTLD : public Tracker
   /** @brief Constructor
     @param parameters TLD parameters TrackerTLD::Params
      */
-  BOILERPLATE_CODE("TLD",TrackerTLD);
-};
+    BOILERPLATE_CODE("TLD",TrackerTLD);
+  };
 
 /** @brief KCF is a novel tracking framework that utilizes properties of circulant matrix to enhance the processing speed.
  * This tracking method is an implementation of @cite KCF_ECCV which is extended to KFC with color-names features (@cite KCF_CN).
@@ -1202,59 +1202,98 @@ class CV_EXPORTS_W TrackerTLD : public Tracker
  * as well as the matlab implementation. For more information about KCF with color-names features, please refer to
  * <http://www.cvl.isy.liu.se/research/objrec/visualtracking/colvistrack/index.html>.
  */
-class CV_EXPORTS_W TrackerKCF : public Tracker
+ class CV_EXPORTS_W TrackerKCF : public Tracker
+ {
+ public:
+  /**
+  * \brief Feature type to be used in the tracking grayscale, colornames, compressed color-names
+  * The modes available now:
+  -   "GRAY" -- Use grayscale values as the feature
+  -   "CN" -- Color-names feature
+  */
+  enum MODE {
+    GRAY = (1u << 0),
+    CN = (1u << 1),
+    CUSTOM = (1u << 2)
+  };
+
+  struct CV_EXPORTS Params
+  {
+    /**
+    * \brief Constructor
+    */
+    Params();
+
+    /**
+    * \brief Read parameters from file, currently unused
+    */
+    void read(const FileNode& /*fn*/);
+
+    /**
+    * \brief Read parameters from file, currently unused
+    */
+    void write(FileStorage& /*fs*/) const;
+
+    double sigma;                 //!<  gaussian kernel bandwidth
+    double lambda;                //!<  regularization
+    double interp_factor;         //!<  linear interpolation factor for adaptation
+    double output_sigma_factor;   //!<  spatial bandwidth (proportional to target)
+    double pca_learning_rate;     //!<  compression learning rate
+    bool resize;                  //!<  activate the resize feature to improve the processing speed
+    bool split_coeff;             //!<  split the training coefficients into two matrices
+    bool wrap_kernel;             //!<  wrap around the kernel values
+    bool compress_feature;        //!<  activate the pca method to compress the features
+    int max_patch_size;           //!<  threshold for the ROI size
+    int compressed_size;          //!<  feature size after compression
+    unsigned int desc_pca;        //!<  compressed descriptors of TrackerKCF::MODE
+    unsigned int desc_npca;       //!<  non-compressed descriptors of TrackerKCF::MODE
+  };
+
+  virtual void setFeatureExtractor(void(*)(const Mat, const Rect, Mat&), bool pca_func = false);
+
+  /** @brief Constructor
+  @param parameters KCF parameters TrackerKCF::Params
+  */
+  BOILERPLATE_CODE("KCF", TrackerKCF);
+};
+
+
+class CV_EXPORTS_W TrackerDSST : public Tracker
 {
 public:
-	/**
-	* \brief Feature type to be used in the tracking grayscale, colornames, compressed color-names
-	* The modes available now:
-	-   "GRAY" -- Use grayscale values as the feature
-	-   "CN" -- Color-names feature
-	*/
-	enum MODE {
-		GRAY = (1u << 0),
-		CN = (1u << 1),
-		CUSTOM = (1u << 2)
-	};
 
-	struct CV_EXPORTS Params
-	{
-		/**
-		* \brief Constructor
-		*/
-		Params();
+  enum Feature {CN, Gray, HOG, FHOG4I, FHOG1, FHOG4};
 
-		/**
-		* \brief Read parameters from file, currently unused
-		*/
-		void read(const FileNode& /*fn*/);
+  struct CV_EXPORTS Params
+  {
+   Params(){
+    sigma = 1.0/16.0;
+    learningRate = 0.025;
+    lambda = 0.01;
+    features.push_back(TrackerDSST::CN);
+    padding = 1.0;
+    minPatchSize = cv::Size(16,16);
+    maxPatchSize = cv::Size(32,32);
+    maxFilterArea = 150*150;
+    minFilterArea = 10*10;
+    interpolate_to_grid = true;
+  }
+  void read(const FileNode& fn);
+  void write(FileStorage& fs) const;
 
-		/**
-		* \brief Read parameters from file, currently unused
-		*/
-		void write(FileStorage& /*fs*/) const;
+  double learningRate;
+  double sigma;
+  double lambda;
+  std::vector<Feature> features;
+  int maxFilterArea;
+  int minFilterArea;
+  double padding;
+  cv::Size minPatchSize;
+  cv::Size maxPatchSize;
+  bool interpolate_to_grid;
+};
 
-		double sigma;                 //!<  gaussian kernel bandwidth
-		double lambda;                //!<  regularization
-		double interp_factor;         //!<  linear interpolation factor for adaptation
-		double output_sigma_factor;   //!<  spatial bandwidth (proportional to target)
-		double pca_learning_rate;     //!<  compression learning rate
-		bool resize;                  //!<  activate the resize feature to improve the processing speed
-		bool split_coeff;             //!<  split the training coefficients into two matrices
-		bool wrap_kernel;             //!<  wrap around the kernel values
-		bool compress_feature;        //!<  activate the pca method to compress the features
-		int max_patch_size;           //!<  threshold for the ROI size
-		int compressed_size;          //!<  feature size after compression
-		unsigned int desc_pca;        //!<  compressed descriptors of TrackerKCF::MODE
-		unsigned int desc_npca;       //!<  non-compressed descriptors of TrackerKCF::MODE
-	};
-
-	virtual void setFeatureExtractor(void(*)(const Mat, const Rect, Mat&), bool pca_func = false);
-
-	/** @brief Constructor
-	@param parameters KCF parameters TrackerKCF::Params
-	*/
-	BOILERPLATE_CODE("KCF", TrackerKCF);
+BOILERPLATE_CODE("DSST",TrackerDSST);
 };
 
 /************************************ MultiTracker Class ---By Laksono Kurnianggoro---) ************************************/
@@ -1266,103 +1305,103 @@ class CV_EXPORTS_W MultiTracker
 {
 public:
 
-	/**
-	* \brief Constructor.
-	* In the case of trackerType is given, it will be set as the default algorithm for all trackers.
-	* @param trackerType the name of the tracker algorithm to be used
-	*/
-	MultiTracker(const String& trackerType = "");
+  /**
+  * \brief Constructor.
+  * In the case of trackerType is given, it will be set as the default algorithm for all trackers.
+  * @param trackerType the name of the tracker algorithm to be used
+  */
+  MultiTracker(const String& trackerType = "");
 
-	/**
-	* \brief Destructor
-	*/
-	~MultiTracker();
+  /**
+  * \brief Destructor
+  */
+  ~MultiTracker();
 
-	/**
-	* \brief Add a new object to be tracked.
-	* The defaultAlgorithm will be used the newly added tracker.
-	* @param image input image
-	* @param boundingBox a rectangle represents ROI of the tracked object
-	*/
-	bool add(const Mat& image, const Rect2d& boundingBox);
+  /**
+  * \brief Add a new object to be tracked.
+  * The defaultAlgorithm will be used the newly added tracker.
+  * @param image input image
+  * @param boundingBox a rectangle represents ROI of the tracked object
+  */
+  bool add(const Mat& image, const Rect2d& boundingBox);
 
-	/**
-	* \brief Add a new object to be tracked.
-	* @param trackerType the name of the tracker algorithm to be used
-	* @param image input image
-	* @param boundingBox a rectangle represents ROI of the tracked object
-	*/
-	bool add(const String& trackerType, const Mat& image, const Rect2d& boundingBox);
+  /**
+  * \brief Add a new object to be tracked.
+  * @param trackerType the name of the tracker algorithm to be used
+  * @param image input image
+  * @param boundingBox a rectangle represents ROI of the tracked object
+  */
+  bool add(const String& trackerType, const Mat& image, const Rect2d& boundingBox);
 
-	/**
-	* \brief Add a set of objects to be tracked.
-	* @param trackerType the name of the tracker algorithm to be used
-	* @param image input image
-	* @param boundingBox list of the tracked objects
-	*/
-	bool add(const String& trackerType, const Mat& image, std::vector<Rect2d> boundingBox);
+  /**
+  * \brief Add a set of objects to be tracked.
+  * @param trackerType the name of the tracker algorithm to be used
+  * @param image input image
+  * @param boundingBox list of the tracked objects
+  */
+  bool add(const String& trackerType, const Mat& image, std::vector<Rect2d> boundingBox);
 
-	/**
-	* \brief Add a set of objects to be tracked using the defaultAlgorithm tracker.
-	* @param image input image
-	* @param boundingBox list of the tracked objects
-	*/
-	bool add(const Mat& image, std::vector<Rect2d> boundingBox);
+  /**
+  * \brief Add a set of objects to be tracked using the defaultAlgorithm tracker.
+  * @param image input image
+  * @param boundingBox list of the tracked objects
+  */
+  bool add(const Mat& image, std::vector<Rect2d> boundingBox);
 
-	/**
-	* \brief Update the current tracking status.
-	* The result will be saved in the internal storage.
-	* @param image input image
-	*/
-	bool update(const Mat& image);
+  /**
+  * \brief Update the current tracking status.
+  * The result will be saved in the internal storage.
+  * @param image input image
+  */
+  bool update(const Mat& image);
 
-	//!<  storage for the tracked objects, each object corresponds to one tracker algorithm.
-	std::vector<Rect2d> objects;
+  //!<  storage for the tracked objects, each object corresponds to one tracker algorithm.
+  std::vector<Rect2d> objects;
 
-	/**
-	* \brief Update the current tracking status.
-	* @param image input image
-	* @param boundingBox the tracking result, represent a list of ROIs of the tracked objects.
-	*/
-	bool update(const Mat& image, std::vector<Rect2d> & boundingBox);
+  /**
+  * \brief Update the current tracking status.
+  * @param image input image
+  * @param boundingBox the tracking result, represent a list of ROIs of the tracked objects.
+  */
+  bool update(const Mat& image, std::vector<Rect2d> & boundingBox);
 
 protected:
-	//!<  storage for the tracker algorithms.
-	std::vector< Ptr<Tracker> > trackerList;
+  //!<  storage for the tracker algorithms.
+  std::vector< Ptr<Tracker> > trackerList;
 
-	//!<  default algorithm for the tracking method.
-	String defaultAlgorithm;
+  //!<  default algorithm for the tracking method.
+  String defaultAlgorithm;
 };
 
 class ROISelector {
 public:
-	Rect2d select(Mat img, bool fromCenter = true);
-	Rect2d select(const std::string& windowName, Mat img, bool showCrossair = true, bool fromCenter = true);
-	void select(const std::string& windowName, Mat img, std::vector<Rect2d> & boundingBox, bool fromCenter = true);
+  Rect2d select(Mat img, bool fromCenter = true);
+  Rect2d select(const std::string& windowName, Mat img, bool showCrossair = true, bool fromCenter = true);
+  void select(const std::string& windowName, Mat img, std::vector<Rect2d> & boundingBox, bool fromCenter = true);
 
-	struct handlerT{
-		// basic parameters
-		bool isDrawing;
-		Rect2d box;
-		Mat image;
+  struct handlerT{
+    // basic parameters
+    bool isDrawing;
+    Rect2d box;
+    Mat image;
 
-		// parameters for drawing from the center
-		bool drawFromCenter;
-		Point2f center;
+    // parameters for drawing from the center
+    bool drawFromCenter;
+    Point2f center;
 
-		// initializer list
-		handlerT() : isDrawing(false), drawFromCenter(true) {};
-	}selectorParams;
+    // initializer list
+    handlerT() : isDrawing(false), drawFromCenter(true) {};
+  }selectorParams;
 
-	// to store the tracked objects
-	std::vector<handlerT> objects;
+  // to store the tracked objects
+  std::vector<handlerT> objects;
 
 private:
-	static void mouseHandler(int event, int x, int y, int flags, void *param);
-	void opencv_mouse_callback(int event, int x, int y, int, void *param);
+  static void mouseHandler(int event, int x, int y, int flags, void *param);
+  void opencv_mouse_callback(int event, int x, int y, int, void *param);
 
-	// save the keypressed characted
-	int key;
+  // save the keypressed characted
+  int key;
 };
 
 Rect2d CV_EXPORTS_W selectROI(Mat img, bool fromCenter = true);
@@ -1379,45 +1418,45 @@ void CV_EXPORTS_W selectROI(const std::string& windowName, Mat img, std::vector<
 class CV_EXPORTS_W MultiTracker_Alt
 {
 public:
-	/** @brief Constructor for Multitracker
-	*/
-	MultiTracker_Alt()
-	{
-		targetNum = 0;
-	}
+  /** @brief Constructor for Multitracker
+  */
+  MultiTracker_Alt()
+  {
+    targetNum = 0;
+  }
 
-	/** @brief Add a new target to a tracking-list and initialize the tracker with a know bounding box that surrounding the target
-	@param image The initial frame
-	@param boundingBox The initial boundig box of target
-	@param tracker_algorithm_name Multi-tracker algorithm name
+  /** @brief Add a new target to a tracking-list and initialize the tracker with a know bounding box that surrounding the target
+  @param image The initial frame
+  @param boundingBox The initial boundig box of target
+  @param tracker_algorithm_name Multi-tracker algorithm name
 
-	@return True if new target initialization went succesfully, false otherwise
-	*/
-	bool addTarget(const Mat& image, const Rect2d& boundingBox, String tracker_algorithm_name);
+  @return True if new target initialization went succesfully, false otherwise
+  */
+  bool addTarget(const Mat& image, const Rect2d& boundingBox, String tracker_algorithm_name);
 
-	/** @brief Update all trackers from the tracking-list, find a new most likely bounding boxes for the targets
-	@param image The current frame
+  /** @brief Update all trackers from the tracking-list, find a new most likely bounding boxes for the targets
+  @param image The current frame
 
-	@return True means that all targets were located and false means that tracker couldn't locate one of the targets in
-	current frame. Note, that latter *does not* imply that tracker has failed, maybe target is indeed
-	missing from the frame (say, out of sight)
-	*/
-	bool update(const Mat& image);
+  @return True means that all targets were located and false means that tracker couldn't locate one of the targets in
+  current frame. Note, that latter *does not* imply that tracker has failed, maybe target is indeed
+  missing from the frame (say, out of sight)
+  */
+  bool update(const Mat& image);
 
-	/** @brief Current number of targets in tracking-list
-	*/
-	int targetNum;
+  /** @brief Current number of targets in tracking-list
+  */
+  int targetNum;
 
-	/** @brief Trackers list for Multi-Object-Tracker
-	*/
-	std::vector <Ptr<Tracker> > trackers;
+  /** @brief Trackers list for Multi-Object-Tracker
+  */
+  std::vector <Ptr<Tracker> > trackers;
 
-	/** @brief Bounding Boxes list for Multi-Object-Tracker
-	*/
-	std::vector <Rect2d> boundingBoxes;
-	/** @brief List of randomly generated colors for bounding boxes display
-	*/
-	std::vector<Scalar> colors;
+  /** @brief Bounding Boxes list for Multi-Object-Tracker
+  */
+  std::vector <Rect2d> boundingBoxes;
+  /** @brief List of randomly generated colors for bounding boxes display
+  */
+  std::vector<Scalar> colors;
 };
 
 /** @brief Multi Object Tracker for TLD. TLD is a novel tracking framework that explicitly decomposes
@@ -1436,17 +1475,17 @@ occlusions, object absence etc.
 class CV_EXPORTS_W MultiTrackerTLD : public MultiTracker_Alt
 {
 public:
-	/** @brief Update all trackers from the tracking-list, find a new most likely bounding boxes for the targets by
-	optimized update method using some techniques to speedup calculations specifically for MO TLD. The only limitation
-	is that	all target bounding boxes should have approximately same aspect ratios. Speed boost is around 20%
+  /** @brief Update all trackers from the tracking-list, find a new most likely bounding boxes for the targets by
+  optimized update method using some techniques to speedup calculations specifically for MO TLD. The only limitation
+  is that all target bounding boxes should have approximately same aspect ratios. Speed boost is around 20%
 
-	@param image The current frame.
+  @param image The current frame.
 
-	@return True means that all targets were located and false means that tracker couldn't locate one of the targets in
-	current frame. Note, that latter *does not* imply that tracker has failed, maybe target is indeed
-	missing from the frame (say, out of sight)
-	*/
-	bool update_opt(const Mat& image);
+  @return True means that all targets were located and false means that tracker couldn't locate one of the targets in
+  current frame. Note, that latter *does not* imply that tracker has failed, maybe target is indeed
+  missing from the frame (say, out of sight)
+  */
+  bool update_opt(const Mat& image);
 };
 
 //! @}
